@@ -13,10 +13,12 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 品牌功能Controller
  */
+@CrossOrigin
 @RestController
 @Api(tags = "PmsBrandController",description = "商品品牌管理")
 @RequestMapping("/brand")
@@ -70,10 +72,10 @@ public class PmsBrandController {
                             @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize) {
         CommonResult commonResult = new CommonResult();
 
-        //TODO 根据品牌名称分页获取品牌列表
+        // 根据品牌名称分页获取品牌列表
+        Map<String,Object> brandPageInfo = brandService.pageBrand(keyword,pageNum,pageSize);
 
-
-        return commonResult;
+        return commonResult.success(brandPageInfo);
     }
 
     @ApiOperation(value = "根据编号查询品牌信息")

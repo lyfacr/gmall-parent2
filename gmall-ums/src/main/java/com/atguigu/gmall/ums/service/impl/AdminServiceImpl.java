@@ -18,6 +18,7 @@ import org.springframework.util.DigestUtils;
  * @since 2019-03-19
  */
 @Service
+@Component
 public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements AdminService {
 
 
@@ -31,6 +32,14 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         Admin admin = baseMapper.selectOne(new QueryWrapper<Admin>()
                 .eq("username", username)
                 .eq("password", digest));
+        return admin;
+    }
+
+    @Override
+    public Admin getAdminByUsername(String userName) {
+        AdminMapper adminMapper = getBaseMapper();
+        Admin admin = adminMapper.selectOne(new QueryWrapper<Admin>().eq("username", userName));
+
         return admin;
     }
 }

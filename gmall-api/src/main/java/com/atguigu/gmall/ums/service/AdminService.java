@@ -18,4 +18,6 @@ public interface AdminService extends IService<Admin> {
 
     //登陆
     Admin login(String username, String password);
+
+    Admin getAdminByUsername(String userName);
 }

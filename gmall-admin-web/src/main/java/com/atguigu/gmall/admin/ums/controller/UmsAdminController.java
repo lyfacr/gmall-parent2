@@ -17,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ import java.util.Map;
 /**
  * 后台用户管理
  */
+@CrossOrigin
 @RestController
 @Api(tags = "AdminController", description = "后台用户管理")
 @RequestMapping("/admin")
@@ -40,7 +42,7 @@ public class UmsAdminController {
 
     @ApiOperation(value = "用户注册")
     @PostMapping(value = "/register")
-    public Object register(@RequestBody UmsAdminParam umsAdminParam, BindingResult result) {
+    public Object register(@Valid @RequestBody UmsAdminParam umsAdminParam, BindingResult result) {
         Admin admin = null;
         //TODO 完成注册功能
 
@@ -49,7 +51,7 @@ public class UmsAdminController {
 
     @ApiOperation(value = "登录以后返回token")
     @PostMapping(value = "/login")
-    public Object login(@RequestBody UmsAdminLoginParam umsAdminLoginParam, BindingResult result) {
+    public Object login(@Valid @RequestBody UmsAdminLoginParam umsAdminLoginParam, BindingResult result) {
         //去数据库登陆
         Admin admin = adminService.login(umsAdminLoginParam.getUsername(), umsAdminLoginParam.getPassword());
 
@@ -95,7 +97,8 @@ public class UmsAdminController {
         String oldToken = request.getHeader(tokenHeader);
         String userName = jwtTokenUtil.getUserNameFromToken(oldToken);
 
-        Admin umsAdmin = adminService.getOne(new QueryWrapper<Admin>().eq("username",userName));
+        //Admin umsAdmin = adminService.getOne(new QueryWrapper<Admin>().eq("username",userName));
+        Admin umsAdmin = adminService.getAdminByUsername(userName);
         Map<String, Object> data = new HashMap<>();
         data.put("username", umsAdmin.getUsername());
         data.put("roles", new String[]{"TEST"});
