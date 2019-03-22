@@ -4,14 +4,17 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.atguigu.gmall.pms.entity.Brand;
 import com.atguigu.gmall.pms.mapper.BrandMapper;
 import com.atguigu.gmall.pms.service.BrandService;
+import com.atguigu.gmall.pms.vo.PmsBrandParam;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -46,5 +49,50 @@ public class BrandServiceImpl extends ServiceImpl<BrandMapper, Brand> implements
         map.put("list",selectPage.getRecords());
 
         return map;
+    }
+
+    @Override
+    public boolean addBrand(PmsBrandParam pmsBrand) {
+        BrandMapper baseMapper = getBaseMapper();
+        Brand brand = new Brand();
+        BeanUtils.copyProperties(pmsBrand,brand);
+        brand.setProductCount(0);
+        brand.setProductCommentCount(0);
+        Integer insert = baseMapper.insert(brand);
+
+
+        return null != insert && insert>0;
+    }
+
+    @Override
+    public boolean updateBrand(Long id, PmsBrandParam pmsBrandParam) {
+        BrandMapper baseMapper = getBaseMapper();
+        Brand brand = new Brand();
+        brand.setId(id);
+        BeanUtils.copyProperties(pmsBrandParam,brand);
+        Integer result = baseMapper.updateById(brand);
+        return null != result && result>0;
+    }
+
+    @Override
+    public void updateshowStatus(List<Long> ids, Integer showStatus) {
+        BrandMapper baseMapper = getBaseMapper();
+        List<Brand> brands = baseMapper.selectBatchIds(ids);
+        for (int i = 0; i < brands.size(); i++) {
+            Brand brand = brands.get(i);
+            brand.setShowStatus(showStatus);
+            Integer result = baseMapper.updateById(brand);
+        }
+    }
+
+    @Override
+    public void updateFactoryStatus(List<Long> ids, Integer factoryStatus) {
+        BrandMapper baseMapper = getBaseMapper();
+        List<Brand> brands = baseMapper.selectBatchIds(ids);
+        for (int i = 0; i < brands.size(); i++) {
+            Brand brand = brands.get(i);
+            brand.setFactoryStatus(factoryStatus);
+            Integer result = baseMapper.updateById(brand);
+        }
     }
 }

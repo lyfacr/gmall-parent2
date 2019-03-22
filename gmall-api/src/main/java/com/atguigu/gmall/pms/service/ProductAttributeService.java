@@ -1,7 +1,10 @@
 package com.atguigu.gmall.pms.service;
 
 import com.atguigu.gmall.pms.entity.ProductAttribute;
+import com.atguigu.gmall.pms.vo.PmsProductAttributeParam;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.Map;
 
 /**
  * <p>
@@ -13,4 +16,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ProductAttributeService extends IService<ProductAttribute> {
 
+    Map<String,Object> pageInfo(Long cid, Integer type, Integer pageNum, Integer pageSize);
+
+    void addPmsProductAttribute(PmsProductAttributeParam productAttributeParam);
+
+    void updatePmsProductAttribute(Long id,PmsProductAttributeParam productAttributeParam);
+
+    void getAttrInfo(Long productCategoryId);
 }
