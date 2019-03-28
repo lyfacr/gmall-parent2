@@ -2,10 +2,13 @@ package com.atguigu.gmall.admin.cms.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.atguigu.gmall.cms.service.PrefrenceAreaService;
+import com.atguigu.gmall.pms.entity.Product;
 import com.atguigu.gmall.to.CommonResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 /**
@@ -23,6 +26,7 @@ public class CmsPrefrenceAreaController {
     public Object listAll() {
        // List<PrefrenceArea> prefrenceAreaList = prefrenceAreaService.listAll();
         //TODO 获取所有商品优选
-        return new CommonResult().success(null);
+        List<Product> list = prefrenceAreaService.listAllPrenceProduct();
+        return new CommonResult().success(list);
     }
 }

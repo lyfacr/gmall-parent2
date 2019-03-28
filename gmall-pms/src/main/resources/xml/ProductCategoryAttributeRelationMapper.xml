@@ -6,5 +6,24 @@
     <sql id="Base_Column_List">
         id, product_category_id, product_attribute_id
     </sql>
+    <insert id="addBatchCategoryAttribute">
+        INSERT	INTO pms_product_category_attribute_relation(product_category_id,product_attribute_id)
+        VALUES
+        <foreach item="item" index="index" collection="ids" separator=",">
+            (
+              #{param2},#{item.id}
+            )
+        </foreach>
+    </insert>
+    <update id="updateBatchCategoryAttribute">
+
+        <foreach collection="ids" item="item" index="index" open="" close="" separator=";">
+            update pms_product_category_attribute_relation
+            <set>
+                product_attribute_id=#{item.id}
+            </set>
+            where product_category_id = ${param2}
+        </foreach>
+    </update>
 
 </mapper>

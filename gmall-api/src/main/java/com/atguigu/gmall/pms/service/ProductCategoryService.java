@@ -24,7 +24,7 @@ public interface ProductCategoryService extends IService<ProductCategory> {
 
     Map<String,Object> pageInfoByPId(Long parentId,Integer pageNum, Integer pageSize );
 
-    void updateNavStatus(List<Long> joinId,Integer navStatus);
+    void updateNavStatus(List<Long> ids,Integer navStatus);
 
     void updateShowStatus(List<Long> ids,Integer showStatus);
 

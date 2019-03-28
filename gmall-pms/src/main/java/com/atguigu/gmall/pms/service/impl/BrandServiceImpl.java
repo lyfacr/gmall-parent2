@@ -76,23 +76,27 @@ public class BrandServiceImpl extends ServiceImpl<BrandMapper, Brand> implements
 
     @Override
     public void updateshowStatus(List<Long> ids, Integer showStatus) {
-        BrandMapper baseMapper = getBaseMapper();
+        /*BrandMapper baseMapper = getBaseMapper();
         List<Brand> brands = baseMapper.selectBatchIds(ids);
         for (int i = 0; i < brands.size(); i++) {
             Brand brand = brands.get(i);
             brand.setShowStatus(showStatus);
             Integer result = baseMapper.updateById(brand);
-        }
+        }*/
+        BrandMapper baseMapper = getBaseMapper();
+        baseMapper.updateBatchShowStatus(ids,showStatus);
     }
 
     @Override
     public void updateFactoryStatus(List<Long> ids, Integer factoryStatus) {
-        BrandMapper baseMapper = getBaseMapper();
+        /*BrandMapper baseMapper = getBaseMapper();
         List<Brand> brands = baseMapper.selectBatchIds(ids);
         for (int i = 0; i < brands.size(); i++) {
             Brand brand = brands.get(i);
             brand.setFactoryStatus(factoryStatus);
             Integer result = baseMapper.updateById(brand);
-        }
+        }*/
+        BrandMapper baseMapper = getBaseMapper();
+        baseMapper.updateBatchFactoryStatus(ids,factoryStatus);
     }
 }

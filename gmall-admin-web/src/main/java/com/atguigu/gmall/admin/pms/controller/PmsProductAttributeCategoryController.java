@@ -89,7 +89,7 @@ public class PmsProductAttributeCategoryController {
     public Object getListWithAttr() {
 
         // 获取所有商品属性分类及其下属性
-        PmsProductAttributeCategoryItem productAttributeCategoryItem =productAttributeCategoryService.getListWithAttr();
+        List<PmsProductAttributeCategoryItem> productAttributeCategoryItem =productAttributeCategoryService.getListWithAttr();
         return new CommonResult().success(productAttributeCategoryItem);
     }
 }

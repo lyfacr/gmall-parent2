@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.atguigu.gmall.constant.RedisCacheConstant;
 import com.atguigu.gmall.pms.entity.ProductCategory;
 import com.atguigu.gmall.pms.entity.ProductCategoryAttributeRelation;
+import com.atguigu.gmall.pms.mapper.ProductCategoryAttributeRelationMapper;
 import com.atguigu.gmall.pms.mapper.ProductCategoryMapper;
 import com.atguigu.gmall.pms.service.ProductCategoryAttributeRelationService;
 import com.atguigu.gmall.pms.service.ProductCategoryService;
@@ -45,7 +46,7 @@ public class ProductCategoryServiceImpl extends ServiceImpl<ProductCategoryMappe
     StringRedisTemplate redisTemplate;
 
     @Autowired
-    ProductCategoryAttributeRelationService productCategoryAttributeRelationService;
+    ProductCategoryAttributeRelationMapper productCategoryAttributeRelationMapper;
 
     @Override
     public void addProductCategory(PmsProductCategoryParam productCategoryParam) {
@@ -53,14 +54,16 @@ public class ProductCategoryServiceImpl extends ServiceImpl<ProductCategoryMappe
         ProductCategory productCategory = new ProductCategory();
         BeanUtils.copyProperties(productCategoryParam,productCategory);
         baseMapper.insert(productCategory);
-        List<Long> productAttributeIdList = productCategoryParam.getProductAttributeIdList();
-        for (int i = 0; i < productAttributeIdList.size(); i++) {
+        List<Long> ids = productCategoryParam.getProductAttributeIdList();
+        productCategoryAttributeRelationMapper.addBatchCategoryAttribute(ids,productCategory.getId());
+
+        /*for (int i = 0; i < productAttributeIdList.size(); i++) {
             Long productAttributeId = productAttributeIdList.get(i);
             ProductCategoryAttributeRelation relation = new ProductCategoryAttributeRelation();
             relation.setProductAttributeId(productAttributeId);
             relation.setProductCategoryId(productCategory.getId());
             productCategoryAttributeRelationService.save(relation);
-        }
+        }*/
 
     }
 
@@ -71,18 +74,18 @@ public class ProductCategoryServiceImpl extends ServiceImpl<ProductCategoryMappe
         ProductCategory productCategory = new ProductCategory();
         productCategory.setId(id);
         BeanUtils.copyProperties(productCategoryParam,productCategory);
-
         baseMapper.updateById(productCategory);
+        List<Long> ids = productCategoryParam.getProductAttributeIdList();
 
-        List<Long> productAttributeIdList = productCategoryParam.getProductAttributeIdList();
-        for (int i = 0; i < productAttributeIdList.size(); i++) {
-            Long productAttributeId = productAttributeIdList.get(i);
+        productCategoryAttributeRelationMapper.updateBatchCategoryAttribute(ids,id);
+        /*for (int i = 0; i < ids.size(); i++) {
+            Long productAttributeId = ids.get(i);
             ProductCategoryAttributeRelation relation = new ProductCategoryAttributeRelation();
             relation.setProductAttributeId(productAttributeId);
             QueryWrapper<ProductCategoryAttributeRelation> queryWrapper = new QueryWrapper<ProductCategoryAttributeRelation>().eq("product_category_id", id);
 
             productCategoryAttributeRelationService.update(relation,queryWrapper);
-        }
+        }*/
     }
 
     @Override
@@ -107,25 +110,29 @@ public class ProductCategoryServiceImpl extends ServiceImpl<ProductCategoryMappe
     }
 
     @Override
-    public void updateNavStatus(List<Long> joinId, Integer navStatus) {
+    public void updateNavStatus(List<Long> ids, Integer navStatus) {
+//        ProductCategoryMapper baseMapper = getBaseMapper();
+//        List<ProductCategory> productCategories = baseMapper.selectBatchIds(joinId);
+//        for (int i = 0; i < productCategories.size(); i++) {
+//            ProductCategory productCategory = productCategories.get(i);
+//            productCategory.setNavStatus(navStatus);
+//            baseMapper.updateById(productCategory);
+//        }
         ProductCategoryMapper baseMapper = getBaseMapper();
-        List<ProductCategory> productCategories = baseMapper.selectBatchIds(joinId);
-        for (int i = 0; i < productCategories.size(); i++) {
-            ProductCategory productCategory = productCategories.get(i);
-            productCategory.setNavStatus(navStatus);
-            baseMapper.updateById(productCategory);
-        }
+        baseMapper.updateBatchNavStatus(ids,navStatus);
     }
 
     @Override
     public void updateShowStatus(List<Long> ids,Integer showStatus) {
-        ProductCategoryMapper baseMapper = getBaseMapper();
+        /*ProductCategoryMapper baseMapper = getBaseMapper();
         List<ProductCategory> productCategories = baseMapper.selectBatchIds(ids);
         for (int i = 0; i < productCategories.size(); i++) {
             ProductCategory productCategory = productCategories.get(i);
             productCategory.setShowStatus(showStatus);
             baseMapper.updateById(productCategory);
-        }
+        }*/
+        ProductCategoryMapper baseMapper = getBaseMapper();
+        baseMapper.updateBatchStatus(ids,showStatus);
     }
 
     @Override

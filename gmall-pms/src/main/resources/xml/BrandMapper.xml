@@ -6,5 +6,23 @@
     <sql id="Base_Column_List">
         id, name, first_letter, sort, factory_status, show_status, product_count, product_comment_count, logo, big_pic, brand_story
     </sql>
+    <update id="updateBatchShowStatus">
+        UPDATE	pms_brand
+        SET	show_status=#{param2}
+        WHERE
+        id IN
+        <foreach item="item" index="index" collection="ids" separator="," open="(" close=")">
+            #{item.id}
+        </foreach>
+    </update>
+    <update id="updateBatchFactoryStatus">
+        UPDATE	pms_brand
+        SET	factory_status=#{param2}
+        WHERE
+        id IN
+        <foreach item="item" index="index" collection="ids" separator="," open="(" close=")">
+            #{item.id}
+        </foreach>
+    </update>
 
 </mapper>

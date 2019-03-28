@@ -6,6 +6,25 @@
     <sql id="Base_Column_List">
         id, parent_id, name, level, product_count, product_unit, nav_status, show_status, sort, icon, keywords, description
     </sql>
+
+    <update id="updateBatchNavStatus">
+        UPDATE	pms_product_category
+        SET	nav_status=#{param2}
+        WHERE
+        id IN
+        <foreach item="item" index="index" collection="ids" separator="," open="(" close=")">
+            #{item.id}
+        </foreach>
+    </update>
+    <update id="updateBatchStatus">
+        UPDATE	pms_product_category
+        SET	show_status=#{param2}
+        WHERE
+        id IN
+        <foreach item="item" index="index" collection="ids" separator="," open="(" close=")">
+            #{item.id}
+        </foreach>
+    </update>
     <!--通用查询映射结果-->
     <resultMap id="BaseResultMap" type="com.atguigu.gmall.pms.entity.ProductCategory">
         <id column="id" property="id" />
@@ -30,5 +49,10 @@
     <select id="listWithChildren" resultMap="listWithChildrenResultMap">
         select * from pms_product_category where parent_id = #{id}
     </select>
+
+    <update id="updateCountById">
+        UPDATE pms_product_category SET product_count=product_count+1
+        WHERE id = #{id}
+    </update>
 
 </mapper>

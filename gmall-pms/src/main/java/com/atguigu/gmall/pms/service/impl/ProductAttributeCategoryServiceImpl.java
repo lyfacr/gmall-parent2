@@ -4,6 +4,7 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.atguigu.gmall.pms.entity.ProductAttribute;
 import com.atguigu.gmall.pms.entity.ProductAttributeCategory;
 import com.atguigu.gmall.pms.mapper.ProductAttributeCategoryMapper;
+import com.atguigu.gmall.pms.mapper.ProductAttributeMapper;
 import com.atguigu.gmall.pms.service.ProductAttributeCategoryService;
 import com.atguigu.gmall.pms.service.ProductAttributeService;
 import com.atguigu.gmall.pms.vo.PmsProductAttributeCategoryItem;
@@ -11,9 +12,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +35,7 @@ import java.util.Map;
 public class ProductAttributeCategoryServiceImpl extends ServiceImpl<ProductAttributeCategoryMapper, ProductAttributeCategory> implements ProductAttributeCategoryService {
 
     @Autowired
-    ProductAttributeService productAttributeService;
+    ProductAttributeMapper productAttributeMapper;
     @Override
     public boolean addPmsProductAttribute(String name) {
         ProductAttributeCategoryMapper baseMapper = getBaseMapper();
@@ -68,23 +71,22 @@ public class ProductAttributeCategoryServiceImpl extends ServiceImpl<ProductAttr
     }
 
     @Override
-    public PmsProductAttributeCategoryItem getListWithAttr() {
+    public List<PmsProductAttributeCategoryItem> getListWithAttr() {
         ProductAttributeCategoryMapper baseMapper = getBaseMapper();
         List<ProductAttributeCategory> categories = baseMapper.selectList(null);
-        PmsProductAttributeCategoryItem pmsProductAttributeCategoryItem = new PmsProductAttributeCategoryItem();
-        List<ProductAttribute> productAttributeList = pmsProductAttributeCategoryItem.getProductAttributeList();
+        ArrayList<PmsProductAttributeCategoryItem> items = new ArrayList<>();
 
-        for (int i = 0; i < categories.size(); i++) {
-            ProductAttributeCategory productAttributeCategory = categories.get(i);
-            QueryWrapper<ProductAttribute> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("product_attribute_category_id",productAttributeCategory.getId());
-            List<ProductAttribute> productAttributes = productAttributeService.list(queryWrapper);
-            for (int j = 0; j < productAttributes.size(); j++) {
-                ProductAttribute productAttribute = productAttributes.get(i);
-                productAttributeList.add(productAttribute);
-            }
-        }
+        categories.forEach(categorie->{
+            PmsProductAttributeCategoryItem attributeCategoryItem = new PmsProductAttributeCategoryItem();
+            BeanUtils.copyProperties(categorie,attributeCategoryItem);
+            QueryWrapper<ProductAttribute> queryWrapper = new QueryWrapper<ProductAttribute>()
+                    .eq("product_attribute_category_id", categorie.getId());
+            List<ProductAttribute> productAttributes = productAttributeMapper.selectList(queryWrapper);
 
-        return pmsProductAttributeCategoryItem;
+            attributeCategoryItem.setProductAttributeList(productAttributes);
+            items.add(attributeCategoryItem);
+        });
+
+        return items;
     }
 }

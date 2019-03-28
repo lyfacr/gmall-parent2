@@ -4,6 +4,7 @@ import com.atguigu.gmall.pms.entity.ProductAttributeCategory;
 import com.atguigu.gmall.pms.vo.PmsProductAttributeCategoryItem;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,5 +23,5 @@ public interface ProductAttributeCategoryService extends IService<ProductAttribu
 
     Map<String,Object> pageInfo(Integer pageNum, Integer pageSize);
 
-    PmsProductAttributeCategoryItem getListWithAttr();
+    List<PmsProductAttributeCategoryItem> getListWithAttr();
 }

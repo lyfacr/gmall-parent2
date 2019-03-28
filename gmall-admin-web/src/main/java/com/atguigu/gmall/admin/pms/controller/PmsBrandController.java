@@ -75,9 +75,9 @@ public class PmsBrandController {
         //删除品牌
         boolean res = brandService.removeById(id);
         if(res){
-            commonResult.success("更新品牌成功");
+            commonResult.success("删除品牌成功");
         }else {
-            commonResult.failed().setMessage("更新失败");
+            commonResult.failed().setMessage("删除失败");
         }
         return commonResult;
     }

@@ -1,16 +1,19 @@
 package com.atguigu.gmall.admin.pms.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.atguigu.gmall.pms.vo.PmsProductResult;
 import com.atguigu.gmall.pms.entity.Product;
 import com.atguigu.gmall.pms.service.ProductService;
 import com.atguigu.gmall.pms.vo.PmsProductParam;
 import com.atguigu.gmall.pms.vo.PmsProductQueryParam;
+import com.atguigu.gmall.search.GmallSearchService;
 import com.atguigu.gmall.to.CommonResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -25,9 +28,12 @@ public class PmsProductController {
     @Reference
     private ProductService productService;
 
+    @Reference(version = "1.0")
+    private GmallSearchService searchService;
+
     @ApiOperation("创建商品")
     @PostMapping(value = "/create")
-    public Object create(@RequestBody PmsProductParam productParam,
+    public Object create(@Valid @RequestBody PmsProductParam productParam,
                          BindingResult bindingResult) {
         // 查询所有一级分类及子分类
         productService.addProduct(productParam);
@@ -38,7 +44,7 @@ public class PmsProductController {
     @GetMapping(value = "/updateInfo/{id}")
     public Object getUpdateInfo(@PathVariable Long id) {
         // 根据商品id获取商品编辑信息
-        Product product = productService.getById(id);
+        Product  product = productService.getById(id);
 
         return new CommonResult().success(product);
     }

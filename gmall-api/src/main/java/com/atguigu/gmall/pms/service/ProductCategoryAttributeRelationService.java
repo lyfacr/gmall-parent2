@@ -2,6 +2,9 @@ package com.atguigu.gmall.pms.service;
 
 import com.atguigu.gmall.pms.entity.ProductCategoryAttributeRelation;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +15,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2019-03-19
  */
 public interface ProductCategoryAttributeRelationService extends IService<ProductCategoryAttributeRelation> {
+
 
 }

@@ -3,6 +3,7 @@ package com.atguigu.gmall.pms.mapper;
 import com.atguigu.gmall.pms.entity.ProductCategory;
 import com.atguigu.gmall.pms.vo.PmsProductCategoryWithChildrenItem;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -17,4 +18,10 @@ import java.util.List;
 public interface ProductCategoryMapper extends BaseMapper<ProductCategory> {
 
     List<PmsProductCategoryWithChildrenItem> listWithChildren(Integer id);
+
+    void updateBatchNavStatus(@Param("ids") List<Long> ids, Integer navStatus);
+
+    void updateBatchStatus(@Param("ids")List<Long> ids, Integer showStatus);
+
+    void updateCountById(Long id);
 }
